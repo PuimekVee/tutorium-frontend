@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/home.dart';
+import 'package:flutter_application_1/pages/login.dart';
 // import 'package:flutter_application_1/pages/home.dart';
 // import 'package:flutter_application_1/pages/login.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'LilitaOne'),
-      home: HomePage()
+      home: LoginPage()
     );
   }
 }
