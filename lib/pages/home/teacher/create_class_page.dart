@@ -126,14 +126,15 @@ class _CreateClassPageState extends State<CreateClassPage> {
     });
 
     try {
-      final selectedCategoryObjects = _categories
-        .where((category) => _selectedCategories.contains(category.id));
+      final selectedCategoryObjects = _categories.where(
+        (category) => _selectedCategories.contains(category.id),
+      );
 
       // 2. Format them into the JSON structure your API expects
       final categoryPayload = _categories
-        .where((category) => _selectedCategories.contains(category.id))
-        .map((category) => category.name) // Get the name (String)
-        .toList();
+          .where((category) => _selectedCategories.contains(category.id))
+          .map((category) => category.name) // Get the name (String)
+          .toList();
 
       final classInfo = class_api.ClassInfo(
         id: 0,
@@ -146,7 +147,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
         teacherName: null,
         enrolledLearners: null,
         // categories: const [],
-        categories: categoryPayload
+        categories: categoryPayload,
       );
 
       debugPrint('Creating class with data: ${classInfo.toPayload()}');
@@ -167,15 +168,15 @@ class _CreateClassPageState extends State<CreateClassPage> {
 
       if (mounted) {
         final message = _selectedCategories.isEmpty
-            ? 'Class "${createdClass.className}" created without categories.' 
-            : 'Class "${createdClass.className}" created successfully with categories!'; 
+            ? 'Class "${createdClass.className}" created without categories.'
+            : 'Class "${createdClass.className}" created successfully with categories!';
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),
             backgroundColor: _selectedCategories.isEmpty
-                ? Colors.orange 
-                : Colors.green, 
+                ? Colors.orange
+                : Colors.green,
             duration: const Duration(seconds: 4),
           ),
         );
@@ -564,19 +565,27 @@ class _CreateClassPageState extends State<CreateClassPage> {
                         } else {
                           _selectedCategories.remove(category.id);
                         }
-                        debugPrint('Selected category IDs: $_selectedCategories');
+                        debugPrint(
+                          'Selected category IDs: $_selectedCategories',
+                        );
                       });
                     },
-                    backgroundColor: isSelected ? Colors.blue[100] : Colors.grey[200],
+                    backgroundColor: isSelected
+                        ? Colors.blue[100]
+                        : Colors.grey[200],
                     selectedColor: Colors.blue[100],
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.blue[900] : Colors.black87,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                       side: BorderSide(
-                        color: isSelected ? Colors.blue[700]! : Colors.grey[300]!,
+                        color: isSelected
+                            ? Colors.blue[700]!
+                            : Colors.grey[300]!,
                       ),
                     ),
                   );

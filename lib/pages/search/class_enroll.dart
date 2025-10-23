@@ -1153,10 +1153,13 @@ class _ClassEnrollPageState extends State<ClassEnrollPage> {
       if (categories == null || categories.isEmpty) {
         return "General";
       }
-      
+
       // If it's not empty, join items with a comma
-      return categories.join(', '); // Turns ["Math", "Programming"] into "Math, Programming"
+      return categories.join(
+        ', ',
+      ); // Turns ["Math", "Programming"] into "Math, Programming"
     }
+
     return Scaffold(
       body: Stack(
         children: [
