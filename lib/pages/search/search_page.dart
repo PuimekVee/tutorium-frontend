@@ -62,6 +62,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _isLoadingRecommended = false;
   bool _isLoadingPopularToggle = false;
   String currentQuery = "";
+  bool _showHomeView = true;
 
   List<String> selectedCategories = [];
   double? minRating;
@@ -79,6 +80,16 @@ class _SearchPageState extends State<SearchPage> {
 
   void _refreshFilterActiveState() {
     isFilterActive = _hasActiveFilters;
+  }
+
+  void _updateViewState() {
+    final bool isAllCategory =
+        selectedCategories.length == 1 && selectedCategories.contains('All');
+    if (currentQuery.isNotEmpty || isFilterActive || isAllCategory) {
+      _showHomeView = false;
+    } else {
+      _showHomeView = true;
+    }
   }
 
   void _toggleCategorySelection(String category, bool shouldSelect) {
@@ -543,12 +554,14 @@ class _SearchPageState extends State<SearchPage> {
   void _runDebouncedSearch(String normalizedQuery) {
     setState(() {
       currentQuery = normalizedQuery;
-      if (normalizedQuery.isEmpty && !isFilterActive) {
+      _updateViewState();
+
+      if (_showHomeView) {
         _filteredClasses = api.searchLocal(_allClasses, "");
       }
     });
 
-    if (normalizedQuery.isEmpty && !isFilterActive) {
+    if (_showHomeView) {
       return;
     }
 
@@ -725,9 +738,12 @@ class _SearchPageState extends State<SearchPage> {
 
                       setState(() {
                         _refreshFilterActiveState();
+                        _updateViewState();
                       });
                       Navigator.pop(context);
-                      _search(currentQuery);
+                      if (!_showHomeView) {
+                        _search(currentQuery);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
@@ -874,8 +890,11 @@ class _SearchPageState extends State<SearchPage> {
                             setState(() {
                               selectedCategories.clear();
                               _refreshFilterActiveState();
+                              _updateViewState();
                             });
-                            _search(currentQuery);
+                            if (!_showHomeView) {
+                              _search(currentQuery);
+                            }
                           },
                         ),
                       if (minRating != null)
@@ -884,8 +903,11 @@ class _SearchPageState extends State<SearchPage> {
                           onDeleted: () {
                             setState(() {
                               _setMinRating(null);
+                              _updateViewState();
                             });
-                            _search(currentQuery);
+                            if (!_showHomeView) {
+                              _search(currentQuery);
+                            }
                           },
                         ),
                       if (maxRating != null)
@@ -894,8 +916,11 @@ class _SearchPageState extends State<SearchPage> {
                           onDeleted: () {
                             setState(() {
                               _setMaxRating(null);
+                              _updateViewState();
                             });
-                            _search(currentQuery);
+                            if (!_showHomeView) {
+                              _search(currentQuery);
+                            }
                           },
                         ),
                     ],
@@ -911,7 +936,7 @@ class _SearchPageState extends State<SearchPage> {
                         padding: EdgeInsets.all(16),
                         child: GridLoadingSkeleton(itemCount: 6),
                       )
-                    else if (currentQuery.isNotEmpty || isFilterActive)
+                    else if (!_showHomeView)
                       _filteredClasses.isNotEmpty
                           ? GridView.builder(
                               shrinkWrap: true,
